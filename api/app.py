@@ -4,6 +4,7 @@ from database.db import db, ma
 from models.curriculo import Curriculo
 from schemas.curriculo_schema import curriculo_schema, curriculos_schema
 import os
+import utils
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +29,7 @@ def get_curriculos():
 def get_curriculo(id):
     curriculo = Curriculo.query.get(id)
     if not curriculo:
-        return jsonify({"erro": "Currículo não encontrado"}), 404
+        return utils.error_not_found()
     return curriculo_schema.jsonify(curriculo), 200
 
 @app.route("/curriculos", methods=["POST"])
