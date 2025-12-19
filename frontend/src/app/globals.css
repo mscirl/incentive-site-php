@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #006872;
+  --color-secondary: #FF9507;
+  --color-tertiary: #2F8891;
+  --shadow-primary: 0px 4px 4px 0px #00000040;
+  --shadow-secondary: 4px 6px 4px #00000087;
+  --text-shadow-primary: 1px 1px 4px #000000ad;
+  --spacing-31: 124px;
+  --spacing-70: 280px;
+  --spacing-100: 400px
+  --spacing-130: 520px;
+  --spacing-228: 912px;
+  --text-2xsm: 28px;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+}
+
