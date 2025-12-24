@@ -1,2 +1,8 @@
 .venv/
-/vendor/
+__pycache__/
+*.pyc
+*.pyo
+vendor/
+composer.lock
+.env
+
