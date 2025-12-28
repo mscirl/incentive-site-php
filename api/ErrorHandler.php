@@ -1,0 +1,1 @@
+//Convenção: métodos públicos antes, privados depois
