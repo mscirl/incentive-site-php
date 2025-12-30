@@ -17,10 +17,12 @@ class Database {
 
         //Condição para conexão sqlite
         if ($dbConnection === 'sqlite') {
-            $capsule->addConnection([
+                $dbPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $dbDatabase;
+                
+                $capsule->addConnection([
                 'driver'   => 'sqlite',
                 #Utilizando dirname(__DIR__, 2) para voltar dois níveis na estrutura de pastas
-                'database' => dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $dbDatabase,
+                'database' => $dbPath,
                 'prefix'   => '',
             ]);
         }
