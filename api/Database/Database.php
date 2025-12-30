@@ -19,7 +19,8 @@ class Database {
         if ($dbConnection === 'sqlite') {
             $capsule->addConnection([
                 'driver'   => 'sqlite',
-                'database' => __DIR__ . '/../../' . $dbDatabase,
+                #Utilizando dirname(__DIR__, 2) para voltar dois níveis na estrutura de pastas
+                'database' => dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $dbDatabase,
                 'prefix'   => '',
             ]);
         }
@@ -53,3 +54,4 @@ class Database {
         }
     }
 }
+?>
