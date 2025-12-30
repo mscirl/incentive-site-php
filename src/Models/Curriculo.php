@@ -1,6 +1,16 @@
-from database.db import db
+<?php
 
-class Curriculo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(200), nullable=False)
-    cv_link = db.Column(db.String(300))
+namespace Mscirl\IncentiveSitePhp\Models;
+
+class Curriculo extends Model {
+    protected $table = 'curriculos';
+    protected $primaryKey = 'id';
+    
+    #Método public para habilitar timestamps (created_at e updated_at nos registros)
+    public $timestamps = true;
+
+    protected $fillable = [
+        'nome',
+        'cv_link',
+    ];
+}
