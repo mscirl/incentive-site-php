@@ -17,13 +17,14 @@ class Database {
 
         //Condição para conexão sqlite
         if ($dbConnection === 'sqlite') {
-                $dbPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $dbDatabase;
-                
+                $dbPath = $_ENV['DB_PATH'] ?? dirname(__DIR__, 2);
+                $dbDatabase = $_ENV['DB_DATABASE'] ?? 'curriculos.db';
+
                 $capsule->addConnection([
-                'driver'   => 'sqlite',
+                'driver' => 'sqlite',
                 #Utilizando dirname(__DIR__, 2) para voltar dois níveis na estrutura de pastas
-                'database' => $dbPath,
-                'prefix'   => '',
+                'database' => $dbPath . DIRECTORY_SEPARATOR . $dbDatabase,
+                'prefix'   => ''
             ]);
         }
 
@@ -56,4 +57,3 @@ class Database {
         }
     }
 }
-?>
