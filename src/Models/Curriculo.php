@@ -2,15 +2,16 @@
 
 namespace Mscirl\IncentiveSitePhp\Models;
 
+use Illuminate\Database\Eloquent\Model;
+
 class Curriculo extends Model {
     protected $table = 'curriculos';
-    protected $primaryKey = 'id';
     
-    #Método public para habilitar timestamps (created_at e updated_at nos registros)
-    public $timestamps = true;
-
     protected $fillable = [
         'nome',
         'cv_link',
     ];
+
+    //Habilita timestamps automaticos (created_at e updated_at nos registros)
+    public $timestamps = true;
 }
