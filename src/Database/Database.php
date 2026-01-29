@@ -20,7 +20,7 @@ class Database {
                 $dbPath = $_ENV['DB_PATH'] ?? dirname(__DIR__, 2);
 
                 //DEBUG
-                echo "Caminho do banco [class Database] " . $dbPath . "\n";
+                //echo "Caminho do banco [class Database]" . $dbPath . "\n";
                 exit;
 
                 $capsule->addConnection([
