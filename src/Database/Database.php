@@ -2,61 +2,120 @@
 
 namespace Mscirl\IncentiveSitePhp\Database;
 
-//Utilizando a classe Capsule do Illuminate Database
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-//Classe Database para gerenciar a conexão com o banco de dados
 class Database {
-    //Inicializando ORM Eloquent (transformação de objetos em sql)
+    
     public static function init() {
-        $capsule = new Capsule;
+        echo "Database::init() iniciado\n";
+        
+        try {
+            $capsule = new Capsule;
+            echo "Capsule criado\n";
+        } catch (Exception $e) {
+            die("Erro ao criar Capsule: " . $e->getMessage() . "\n");
+        }
 
-        //Lê as variáveis do .env
+        // Lê as variáveis do .env
         $dbConnection = $_ENV['DB_CONNECTION'] ?? 'sqlite';
         $dbDatabase = $_ENV['DB_DATABASE'] ?? 'curriculos.db';
-
-        //Condição para conexão sqlite
-        if ($dbConnection === 'sqlite') {
-                $dbPath = $_ENV['DB_PATH'] ?? dirname(__DIR__, 2);
-
-                //DEBUG
-                //echo "Caminho do banco [class Database]" . $dbPath . "\n";
-                exit;
-
-                $capsule->addConnection([
-                'driver' => 'sqlite',
-                #Utilizando dirname(__DIR__, 2) para voltar dois níveis na estrutura de pastas
-                'database' => $dbPath . DIRECTORY_SEPARATOR . $dbDatabase,
-                'prefix'   => ''
-            ]);
-        }
-
-        //Torna o Capsule disponível globalmente na aplicação utilizando o método da classe Manager do Illuminate Database
-        $capsule->setAsGlobal();
-
-        //Inicializa o Eloquent ORM
-        $capsule->bootEloquent();
-
-        //Chama o método private createTables() da própria classe, que é definido abaixo
-        //No PHP: dentro das classes, a ordem não importa
-        self::createTables();
-    }
-
-    //Criando a o método private createTables()
-    //Utilizando método "private" porque criar tabelas é uma tarefa "interna", ninguém de fora deve criar tabelas na aplicação
-    private static function createTables() {
-        $capsule = Capsule::connection();
         
-        //Verificando se a tabela 'curriculos' já existe
-        if (!$capsule->getSchemaBuilder()->hasTable('curriculos')) {
+        echo "Configuração: $dbConnection | $dbDatabase\n";
 
-            //Se não existir, cria a tabela usando function($table) +campos necessários
+        // Condição para conexão SQLite
+        if ($dbConnection === 'sqlite') {
+            // Define o caminho do banco na raiz do projeto
+            $dbPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $dbDatabase;
+            
+            echo "> Caminho do banco: $dbPath\n";
+            
+            try {
+                $capsule->addConnection([
+                    'driver'   => 'sqlite',
+                    'database' => $dbPath,
+                    'prefix'   => '',
+                ]);
+                echo "> Conexão SQLite configurada\n";
+            } catch (Exception $e) {
+                die("> Erro na conexão SQLite: " . $e->getMessage() . "\n");
+            }
+        }
+
+        // Torna o Capsule disponível globalmente
+        try {
+            $capsule->setAsGlobal();
+            echo "Capsule global\n";
+        } catch (Exception $e) {
+            die("> Erro setAsGlobal: " . $e->getMessage() . "\n");
+        }
+
+        // Inicializa o Eloquent ORM
+        try {
+            $capsule->bootEloquent();
+            echo ">Eloquent iniciado\n";
+        } catch (Exception $e) {
+            die("> Erro bootEloquent: " . $e->getMessage() . "\n");
+        }
+
+        // Criação de tabelas
+        try {
+            self::createTables();
+            echo "> Tabelas criadas/verificadas\n";
+        } catch (Exception $e) {
+            die("> Erro createTables: " . $e->getMessage() . "\n");
+        }
+        
+        echo "Database::init() concluído\n";
+    }
+
+private static function createTables() {
+    echo "> createTables() iniciado\n";
+    
+    $dbPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . ($_ENV['DB_DATABASE'] ?? 'curriculos.db');
+    
+    if (!file_exists($dbPath)) {
+        echo "> Criando arquivo do banco: $dbPath\n";
+        
+        touch($dbPath);
+        chmod($dbPath, 0664);
+        
+        echo "Arquivo do banco criado!\n";
+    } else {
+        echo "Arquivo do banco já existe\n";
+    }
+    // ====================================================================
+    
+    try {
+        $capsule = Capsule::connection();
+        echo "> Conexão obtida\n";
+    } catch (Exception $e) {
+        die("> Erro ao obter conexão: " . $e->getMessage() . "\n");
+    }
+    
+    // Verifica se a tabela 'curriculos' já existe
+    try {
+        $hasTable = $capsule->getSchemaBuilder()->hasTable('curriculos');
+        echo "> Tabela 'curriculos' existe? " . ($hasTable ? 'Sim' : 'Não') . "\n";
+    } catch (Exception $e) {
+        die("> Erro ao verificar tabela: " . $e->getMessage() . "\n");
+    }
+
+    if (!$hasTable) {
+        echo "> Criando tabela 'curriculos'...\n";
+        
+        try {
             $capsule->getSchemaBuilder()->create('curriculos', function ($table) {
-                $table->increments('id'); //Incremento automático
+                $table->increments('id');
                 $table->string('nome', 200);
-                $table->string('cv_link', 300)->nullable(); //Pode ser nulo/vazio (campo opcional)
-                $table->timestamps(); //Registra data de criação e/ou atualização
+                $table->string('cv_link', 300)->nullable();
+                $table->timestamps();
             });
+            echo "> Tabela 'curriculos' criada!\n";
+        } catch (Exception $e) {
+            die("> Erro ao criar tabela: " . $e->getMessage() . "\n");
         }
     }
+    
+    echo "createTables() concluído\n";
+}
 }
