@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const flaskUrl = "http://127.0.0.1:5001/api/curriculos";
+  const flaskUrl = "http://www.institutoincentive.org.br/api/curriculos";
 
   try {
     const response = await fetch(flaskUrl, {

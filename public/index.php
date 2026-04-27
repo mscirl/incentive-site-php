@@ -4,7 +4,7 @@
  * API de Currículos Lattes - Versão Produção (LIMPA)
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Mscirl\IncentiveSitePhp\Database\Database;
 use Mscirl\IncentiveSitePhp\Models\Curriculo;
