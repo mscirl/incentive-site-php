@@ -21,13 +21,13 @@ try {
     $dotenv->load();
 } catch (Exception $e) { }
 
-try {
-    Database::init();
-} catch (Exception $e) {
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'erro' => 'Erro de banco de dados.']);
-    exit;
-}
+//try {
+//    Database::init();
+//} catch (Exception $e) {
+//    header('Content-Type: application/json');
+//    echo json_encode(['success' => false, 'erro' => 'Erro de banco de dados.']);
+//    exit;
+//}
 
 $app = AppFactory::create();
 
