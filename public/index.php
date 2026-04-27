@@ -7,7 +7,8 @@ error_reporting(E_ALL);
  * API de Currículos Lattes - Versão Produção (LIMPA)
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
 
 use Mscirl\IncentiveSitePhp\Database\Database;
 use Mscirl\IncentiveSitePhp\Models\Curriculo;
@@ -17,7 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 // ========== INICIALIZAÇÃO ==========
 try {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->load();
 } catch (Exception $e) { }
 
