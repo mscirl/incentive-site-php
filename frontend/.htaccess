@@ -1,8 +1,11 @@
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [QSA,L]
+RewriteBase /
 
-<Files .env>
-    Order allow,deny
-    Deny from all
-</Files>
+# Se a URL começar com /api, não procure arquivos, mande direto para o PHP
+RewriteRule ^api/.*$ index.php [QSA,L]
+
+# 2. REGRAS PARA O RESTANTE DO SITE (Next.js)
+# Se não for /api e o arquivo ou pasta não existirem, manda pro index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
