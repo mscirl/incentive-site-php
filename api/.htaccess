@@ -1,9 +1,5 @@
 RewriteEngine On
-RewriteBase /
-
-# Tentativa com barra inicial e caminho completo
-RewriteRule ^api/(.*)$ /index.php [QSA,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+RewriteRule ^ index.php [QSA,L]
