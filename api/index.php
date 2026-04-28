@@ -44,21 +44,21 @@ $app->add(function (Request $request, $handler) {
 });
 
 // ========== ROTAS ==========
-$app->get('/api/health', function (Request $request, Response $response) {
-    $data = ['success' => true, 'status' => 'healthy'];
+$app->get('/health', function (Request $request, Response $response, array $args = array()) {
+    $data = array('success' => true, 'status' => 'healthy');
     $response->getBody()->write(json_encode($data));
     return $response;
 });
 
-$app->get('/', function (Request $request, Response $response) {
-    $data = ['success' => true, 'mensagem' => 'API ativa.'];
+$app->get('/', function (Request $request, Response $response, array $args = array()) {
+    $data = array('success' => true, 'mensagem' => 'API ativa.');
     $response->getBody()->write(json_encode($data));
     return $response;
 });
 
-$app->get('/api/curriculos', function (Request $request, Response $response) {
+$app->get('/curriculos', function (Request $request, Response $response, array $args = array()) {
     $curriculos = Curriculo::all();
-    $response->getBody()->write(json_encode(['success' => true, 'data' => $curriculos]));
+    $response->getBody()->write(json_encode(array('success' => true, 'data' => $curriculos)));
     return $response;
 });
 
