@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Dados do seu print da Locaweb
-$host = "incentive.mysql.dbaas.com.br";
+$host = "179.188.16.171";
 $db   = "incentive";
 $user = "incentive";
 $pass = "a@x4Gr7Rsys"; // Coloque a senha que você conferiu no painel
