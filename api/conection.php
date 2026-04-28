@@ -7,13 +7,13 @@ error_reporting(E_ALL);
 $host = "incentive.mysql.dbaas.com.br";
 $db   = "incentive";
 $user = "incentive";
-$pass = "SUA_SENHA_AQUI"; // Coloque a senha que você conferiu no painel
+$pass = "a@x4Gr7Rsys"; // Coloque a senha que você conferiu no painel
 
 echo "<h3>Testando Conexão com o Banco:</h3>";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-    echo "<p style='color:green'>✅ Sucesso! O PHP conseguiu conectar ao banco.</p>";
+    echo "<p style='color:green'>Sucesso! O PHP conseguiu conectar ao banco.</p>";
     
     // Teste de tabela
     $query = $pdo->query("SHOW TABLES LIKE 'curriculos'");
