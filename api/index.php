@@ -43,9 +43,10 @@ $app->add(function (Request $request, $handler) {
         ->withHeader('Content-Type', 'application/json');
 });
 
+
 // ========== ROTAS ==========
 $app->get('/health', function (Request $request, Response $response, array $args = array()) {
-    $data = array('success' => true, 'status' => 'healthy');
+    $data = ['success' => true, 'status' => 'healthy'];
     $response->getBody()->write(json_encode($data));
     return $response;
 });
