@@ -21,11 +21,19 @@ try {
     $dotenv->load();
 } catch (Exception $e) { }
 
+
+// ========== INICIALIZAÇÃO DO BANCO ==========
 try {
+    // Forçar a exibição de erros do banco
     Database::init();
+    \Illuminate\Support\Facades\DB::connection()->getPdo();
 } catch (Exception $e) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'erro' => 'Erro de banco de dados.']);
+    echo json_encode([
+        'success' => false, 
+        'erro_tecnico' => $e->getMessage(),
+        'dica' => 'Verifique se o host e a senha no .env estão corretos para a Locaweb'
+    ]);
     exit;
 }
 

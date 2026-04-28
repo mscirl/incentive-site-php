@@ -1,15 +1,28 @@
-// ========== INICIALIZAÇÃO DO BANCO ==========
-try {
-    // Forçar a exibição de erros do banco
-    Database::init();
-    // Teste simples para ver se a conexão está viva
-    \Illuminate\Support\Facades\DB::connection()->getPdo();
-} catch (Exception $e) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false, 
-        'erro_tecnico' => $e->getMessage(),
-        'dica' => 'Verifique se o host e a senha no .env estão corretos para a Locaweb'
-    ]);
-    exit;
+<?php
+
+namespace Mscirl\IncentiveSitePhp\Database;
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+class Database
+{
+    public static function init()
+    {
+        $capsule = new Capsule;
+
+        // Na Locaweb, forçar o MySQL
+            $capsule->addConnection([
+            'driver'    => 'mysql',
+            'host'      => $_ENV['DB_HOST'] ?? '',
+            'database'  => $_ENV['DB_DATABASE'] ?? '',
+            'username'  => $_ENV['DB_USERNAME'] ?? '', 
+            'password'  => $_ENV['DB_PASSWORD'] ?? '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ]);
+
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
+    }
 }
