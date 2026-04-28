@@ -32,6 +32,8 @@ try {
 
 $app = AppFactory::create();
 
+$app->setBasePath('/api');
+
 // ========== MIDDLEWARE DE CORS ==========
 $app->add(function (Request $request, $handler) {
     $response = $handler->handle($request);
