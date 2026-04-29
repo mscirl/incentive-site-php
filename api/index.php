@@ -19,20 +19,21 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->load();
-} catch (Exception $e) { }
-
+} catch (Exception $e) {
+    // Se entrar aqui, o PHP não achou o .env
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'erro' => 'Arquivo .env nao encontrado na raiz.']);
+    exit;
+}
 
 // ========== INICIALIZAÇÃO DO BANCO ==========
 try {
-    // Forçar a exibição de erros do banco
     Database::init();
-    \Illuminate\Support\Facades\DB::connection()->getPdo();
 } catch (Exception $e) {
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false, 
-        'erro_tecnico' => $e->getMessage(),
-        'dica' => 'Verifique se o host e a senha no .env estão corretos para a Locaweb'
+        'erro_tecnico' => $e->getMessage()
     ]);
     exit;
 }
