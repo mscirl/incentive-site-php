@@ -1,13 +1,12 @@
 <?php
-
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 /**
- * API de Currículos Lattes - Versão Produção (LIMPA)
+ * API de Currículos Lattes - Versão Produção
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
 
 use Mscirl\IncentiveSitePhp\Database\Database;
 use Mscirl\IncentiveSitePhp\Models\Curriculo;
@@ -15,24 +14,19 @@ use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-// ========== INICIALIZAÇÃO ==========
+// ========== CARREGAMENTO DO .ENV ==========
 try {
-    // Procurando o arquivo 'env' na raiz
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', 'env');
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->load();
 } catch (Exception $e) {
-    try {
-        $dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'], '.env');
-        $dotenv->load();
-    } catch (Exception $e2) {
-        header('Content-Type: application/json');
-        echo json_encode([
-            'success' => false, 
-            'erro' => 'O PHP ainda nao consegue ler o arquivo de configuracao.',
-            'caminho_tentado' => $_SERVER['DOCUMENT_ROOT']
-        ]);
-        exit;
-    }
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false, 
+        'erro' => 'Arquivo .env não encontrado',
+        'caminho_procurado' => realpath(__DIR__ . '/..'),
+        'detalhe' => $e->getMessage()
+    ]);
+    exit;
 }
 
 // ========== INICIALIZAÇÃO DO BANCO ==========
@@ -42,15 +36,19 @@ try {
     header('Content-Type: application/json');
     echo json_encode([
         'success' => false, 
-        'erro_tecnico' => $e->getMessage()
+        'erro' => 'Erro ao conectar com banco de dados',
+        'detalhe' => $e->getMessage(),
+        'config' => [
+            'host' => $_ENV['DB_HOST'] ?? 'não definido',
+            'database' => $_ENV['DB_DATABASE'] ?? 'não definido',
+            'username' => $_ENV['DB_USERNAME'] ?? 'não definido'
+        ]
     ]);
     exit;
 }
 
 $app = AppFactory::create();
-
 $app->setBasePath('/api');
-
 
 // ========== MIDDLEWARE DE CORS ==========
 $app->add(function (Request $request, $handler) {
@@ -62,25 +60,40 @@ $app->add(function (Request $request, $handler) {
         ->withHeader('Content-Type', 'application/json');
 });
 
-
 // ========== ROTAS ==========
-$app->get('/health', function (Request $request, Response $response, array $args = array()) {
-    $data = ['success' => true, 'status' => 'healthy'];
+$app->get('/health', function (Request $request, Response $response) {
+    $data = [
+        'success' => true, 
+        'status' => 'healthy',
+        'database' => 'connected'
+    ];
     $response->getBody()->write(json_encode($data));
     return $response;
 });
 
-$app->get('/', function (Request $request, Response $response, array $args = array()) {
-    $data = array('success' => true, 'mensagem' => 'API ativa.');
+$app->get('/', function (Request $request, Response $response) {
+    $data = ['success' => true, 'mensagem' => 'API de Currículos Lattes ativa.'];
     $response->getBody()->write(json_encode($data));
     return $response;
 });
 
-$app->get('/curriculos', function (Request $request, Response $response, array $args = array()) {
-    $curriculos = Curriculo::all();
-    $response->getBody()->write(json_encode(array('success' => true, 'data' => $curriculos)));
-    return $response;
+$app->get('/curriculos', function (Request $request, Response $response) {
+    try {
+        $curriculos = Curriculo::all();
+        $response->getBody()->write(json_encode([
+            'success' => true, 
+            'data' => $curriculos,
+            'total' => count($curriculos)
+        ]));
+        return $response;
+    } catch (Exception $e) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'erro' => 'Erro ao buscar currículos',
+            'detalhe' => $e->getMessage()
+        ]));
+        return $response->withStatus(500);
+    }
 });
 
 $app->run();
-
