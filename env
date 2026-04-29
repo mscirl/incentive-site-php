@@ -1,0 +1,5 @@
+DB_DRIVER=mysql
+DB_HOST=179.188.16.171
+DB_DATABASE=incentive
+DB_USERNAME=incentive
+DB_PASSWORD=a@x4Gr7Rsys

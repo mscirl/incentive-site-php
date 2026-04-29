@@ -17,13 +17,22 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 // ========== INICIALIZAÇÃO ==========
 try {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    // Procurando o arquivo 'env' na raiz
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', 'env');
     $dotenv->load();
 } catch (Exception $e) {
-    // Se entrar aqui, o PHP não achou o .env
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'erro' => 'Arquivo .env nao encontrado na raiz.']);
-    exit;
+    try {
+        $dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'], '.env');
+        $dotenv->load();
+    } catch (Exception $e2) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false, 
+            'erro' => 'O PHP ainda nao consegue ler o arquivo de configuracao.',
+            'caminho_tentado' => $_SERVER['DOCUMENT_ROOT']
+        ]);
+        exit;
+    }
 }
 
 // ========== INICIALIZAÇÃO DO BANCO ==========
